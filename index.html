@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心流战记 - Flow Chronicles</title>
+
+    <!-- Google Fonts 引入 -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ============ 全局样式重置 ============ */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ============ 全局背景与字体 ============ */
+        body {
+            font-family: 'Noto Sans SC', 'Orbitron', sans-serif;
+            background: #0f0f1e;
+            color: #e0e0e0;
+            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ============ 星空背景层（装饰用） ============ */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(30, 60, 120, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(60, 30, 100, 0.15) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ============ 主容器：左右两栏布局 ============ */
+        .container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            width: 96%;
+            height: 94vh;
+            gap: 18px;
+            max-width: 1400px;
+        }
+
+        /* ============ 左侧面板：物理硬件模拟区 ============ */
+        .control-panel {
+            flex: 0 0 260px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding: 28px 18px;
+            /* 玻璃拟态效果 */
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(100, 200, 255, 0.18);
+            border-radius: 22px;
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06);
+        }
+
+        /* 面板标题 */
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #64c8ff;
+            text-align: center;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(100, 200, 255, 0.18);
+            text-shadow: 0 0 12px rgba(100, 200, 255, 0.5);
+        }
+
+        /* 魔方图示（纯 CSS 绘制，装饰用） */
+        .cube-icon {
+            text-align: center;
+            font-size: 48px;
+            margin: 4px 0;
+            filter: drop-shadow(0 0 12px rgba(100, 200, 255, 0.4));
+            animation: cube-float 4s ease-in-out infinite;
+        }
+
+        @keyframes cube-float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50%       { transform: translateY(-6px) rotate(4deg); }
+        }
+
+        /* 当前状态标签 */
+        .current-state-label {
+            text-align: center;
+            font-size: 12px;
+            color: rgba(200, 200, 255, 0.5);
+            letter-spacing: 1px;
+            min-height: 18px;
+            transition: color 0.4s;
+        }
+
+        /* ============ 翻转按钮 ============ */
+        .control-button {
+            flex: 1;
+            padding: 0 16px;
+            border-radius: 14px;
+            border: 1.5px solid rgba(100, 200, 255, 0.25);
+            background: rgba(255, 255, 255, 0.04);
+            color: #dde8ff;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.28s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 按钮闪光扫描效果 */
+        .control-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -120%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transition: left 0.55s ease;
+        }
+
+        .control-button:hover::after {
+            left: 160%;
+        }
+
+        .control-button .btn-icon {
+            font-size: 22px;
+        }
+
+        .control-button .btn-label {
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        /* 学习按钮 */
+        .btn-study {
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-study:hover, .btn-study.active {
+            background: rgba(0, 212, 255, 0.12);
+            border-color: rgba(0, 212, 255, 0.7);
+            box-shadow: 0 0 22px rgba(0, 212, 255, 0.3), inset 0 0 12px rgba(0, 212, 255, 0.06);
+            transform: translateY(-2px);
+            color: #00d4ff;
+        }
+
+        /* 运动按钮 */
+        .btn-exercise {
+            border-color: rgba(255, 140, 60, 0.3);
+        }
+
+        .btn-exercise:hover, .btn-exercise.active {
+            background: rgba(255, 140, 60, 0.12);
+            border-color: rgba(255, 140, 60, 0.7);
+            box-shadow: 0 0 22px rgba(255, 140, 60, 0.3), inset 0 0 12px rgba(255, 140, 60, 0.06);
+            transform: translateY(-2px);
+            color: #ff8c3c;
+        }
+
+        /* 休息按钮 */
+        .btn-rest {
+            border-color: rgba(180, 120, 255, 0.3);
+        }
+
+        .btn-rest:hover, .btn-rest.active {
+            background: rgba(180, 120, 255, 0.12);
+            border-color: rgba(180, 120, 255, 0.7);
+            box-shadow: 0 0 22px rgba(180, 120, 255, 0.3), inset 0 0 12px rgba(180, 120, 255, 0.06);
+            transform: translateY(-2px);
+            color: #b478ff;
+        }
+
+        .control-button:active {
+            transform: translateY(0) scale(0.97);
+        }
+
+        /* ============ 右侧：赛博星球视觉区 ============ */
+        .planet-area {
+            flex: 1;
+            position: relative;
+            border-radius: 22px;
+            border: 1px solid rgba(100, 200, 255, 0.12);
+            overflow: hidden;
+            /* 玻璃拟态底层 */
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.04);
+            /* 背景渐变层叠（通过伪元素实现平滑过渡） */
+            transition: box-shadow 1s ease;
+        }
+
+        /* 星球区域背景渐变伪元素（用于状态切换动画） */
+        .planet-area::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            transition: opacity 3s ease;
+            z-index: 0;
+        }
+
+        /* 学习状态背景 */
+        .planet-area.state-study::before {
+            background: linear-gradient(135deg, #062a4a 0%, #0a4a6a 50%, #083a3a 100%);
+        }
+
+        /* 运动状态背景 */
+        .planet-area.state-exercise::before {
+            background: linear-gradient(135deg, #4a1a00 0%, #7a3a10 50%, #5a2000 100%);
+        }
+
+        /* 休息状态背景 */
+        .planet-area.state-rest::before {
+            background: linear-gradient(135deg, #1a1a30 0%, #1f1f38 100%);
+        }
+
+        /* ============ 粒子特效容器 ============ */
+        .particles-container {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        /* ============ 粒子元素通用样式 ============ */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* 学习模式：向上浮动动画（治愈之雨） */
+        @keyframes float-up {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.9;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-110vh) translateX(var(--tx));
+                opacity: 0;
+            }
+        }
+
+        /* 运动模式：脉冲光斑动画 */
+        @keyframes pulse-glow {
+            0%, 100% {
+                transform: scale(1) translate(0, 0);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(var(--ps, 2)) translate(var(--mx, 0px), var(--my, 0px));
+                opacity: 1;
+            }
+        }
+
+        /* ============ 星球中央内容区 ============ */
+        .planet-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* 默认/休息状态文字 */
+        .planet-status {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(18px, 2.5vw, 28px);
+            font-weight: 700;
+            color: rgba(100, 160, 255, 0.7);
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(100, 160, 255, 0.4);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            white-space: nowrap;
+        }
+
+        .planet-status.fade-out {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        /* ============ 计时器样式 ============ */
+        .timer-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            transform: scale(0.85);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            pointer-events: none;
+        }
+
+        .timer-wrapper.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .timer-label {
+            font-size: 13px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: rgba(200, 220, 255, 0.5);
+        }
+
+        .timer-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(60px, 9vw, 100px);
+            font-weight: 900;
+            letter-spacing: 4px;
+            line-height: 1;
+            color: #00d4ff;
+            text-shadow:
+                0 0 20px rgba(0, 212, 255, 0.8),
+                0 0 60px rgba(0, 212, 255, 0.3);
+            transition: color 0.8s ease, text-shadow 0.8s ease;
+        }
+
+        /* 运动模式计时器颜色 */
+        .timer-display.exercise-color {
+            color: #ff8c3c;
+            text-shadow:
+                0 0 20px rgba(255, 140, 60, 0.8),
+                0 0 60px rgba(255, 140, 60, 0.3);
+        }
+
+        /* ============ 星球装饰：中心光晕 ============ */
+        .planet-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(300px, 40vw);
+            height: min(300px, 40vw);
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(100, 160, 255, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 2;
+            transition: background 3s ease;
+            animation: glow-pulse 6s ease-in-out infinite;
+        }
+
+        .planet-area.state-study .planet-glow {
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+        }
+
+        .planet-area.state-exercise .planet-glow {
+            background: radial-gradient(circle, rgba(255, 140, 60, 0.15) 0%, transparent 70%);
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+            50%       { opacity: 1;   transform: translate(-50%, -50%) scale(1.08); }
+        }
+
+        /* 网格线装饰（赛博感） */
+        .cyber-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(100, 200, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(100, 200, 255, 0.025) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.6;
+        }
+
+        /* ============ 对话框弹窗（休息时显示） ============ */
+        .dialog-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 8, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+
+        .dialog-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .dialog-box {
+            background: linear-gradient(160deg, rgba(28, 28, 52, 0.97) 0%, rgba(40, 24, 65, 0.97) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1.5px solid rgba(180, 120, 255, 0.35);
+            border-radius: 24px;
+            padding: 42px 44px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            box-shadow:
+                0 16px 64px rgba(0, 0, 0, 0.6),
+                0 0 40px rgba(150, 80, 255, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            transform: scale(0.88) translateY(10px);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .dialog-overlay.show .dialog-box {
+            transform: scale(1) translateY(0);
+        }
+
+        .dialog-emoji {
+            font-size: 40px;
+            margin-bottom: 14px;
+        }
+
+        .dialog-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #b478ff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-shadow: 0 0 18px rgba(180, 120, 255, 0.5);
+        }
+
+        .dialog-message {
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 17px;
+            font-weight: 300;
+            color: #d8d8f0;
+            line-height: 1.9;
+            margin-bottom: 32px;
+            letter-spacing: 0.5px;
+        }
+
+        .dialog-close-btn {
+            background: linear-gradient(135deg, rgba(180, 120, 255, 0.2), rgba(0, 212, 255, 0.15));
+            border: 1.5px solid rgba(180, 120, 255, 0.5);
+            color: #c8a0ff;
+            padding: 12px 36px;
+            border-radius: 50px;
+            font-family: 'Noto Sans SC', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 2px;
+            transition: all 0.28s ease;
+        }
+
+        .dialog-close-btn:hover {
+            background: linear-gradient(135deg, rgba(180, 120, 255, 0.4), rgba(0, 212, 255, 0.25));
+            border-color: rgba(180, 120, 255, 0.9);
+            box-shadow: 0 0 24px rgba(180, 120, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .dialog-close-btn:active {
+            transform: translateY(0) scale(0.97);
+        }
+
+        /* ============ 响应式布局 ============ */
+        @media (max-width: 900px) {
+            body {
+                overflow-y: auto;
+                height: auto;
+                align-items: flex-start;
+            }
+
+            .container {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+                width: 100%;
+                padding: 12px;
+                gap: 12px;
+            }
+
+            .control-panel {
+                flex: none;
+                flex-direction: row;
+                gap: 10px;
+                padding: 16px;
+            }
+
+            .cube-icon,
+            .current-state-label {
+                display: none;
+            }
+
+            .control-button {
+                flex: 1;
+                min-height: 70px;
+                font-size: 13px;
+                gap: 6px;
+            }
+
+            .control-button .btn-icon {
+                font-size: 18px;
+            }
+
+            .planet-area {
+                flex: none;
+                height: 60vw;
+                min-height: 260px;
+            }
+        }
+
+        @media (max-width: 540px) {
+            .panel-title {
+                display: none;
+            }
+
+            .control-button .btn-label {
+                font-size: 12px;
+            }
+
+            .timer-display {
+                font-size: 56px;
+            }
+
+            .dialog-box {
+                padding: 30px 22px;
+            }
+
+            .dialog-message {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- ===== 左侧面板：物理硬件模拟区 ===== -->
+    <div class="control-panel">
+        <div class="panel-title">心流魔方</div>
+
+        <!-- 魔方装饰图示 -->
+        <div class="cube-icon">🟦</div>
+
+        <!-- 当前状态显示 -->
+        <div class="current-state-label" id="stateLabel">待机中</div>
+
+        <!-- 翻转到【学习】面 -->
+        <button class="control-button btn-study" id="btnStudy" onclick="switchMode('study')">
+            <span class="btn-icon"><i class="fas fa-book-open"></i></span>
+            <span class="btn-label">翻转到<br>【学习】面</span>
+        </button>
+
+        <!-- 翻转到【运动】面 -->
+        <button class="control-button btn-exercise" id="btnExercise" onclick="switchMode('exercise')">
+            <span class="btn-icon"><i class="fas fa-person-running"></i></span>
+            <span class="btn-label">翻转到<br>【运动】面</span>
+        </button>
+
+        <!-- 翻转到【休息】面 -->
+        <button class="control-button btn-rest" id="btnRest" onclick="switchMode('rest')">
+            <span class="btn-icon"><i class="fas fa-leaf"></i></span>
+            <span class="btn-label">翻转到<br>【休息】面</span>
+        </button>
+    </div>
+
+    <!-- ===== 右侧面板：赛博星球视觉区 ===== -->
+    <div class="planet-area" id="planetArea">
+        <!-- 赛博网格背景 -->
+        <div class="cyber-grid"></div>
+
+        <!-- 粒子特效容器 -->
+        <div class="particles-container" id="particlesContainer"></div>
+
+        <!-- 星球光晕 -->
+        <div class="planet-glow"></div>
+
+        <!-- 中央内容 -->
+        <div class="planet-content">
+            <!-- 默认/休息状态文字 -->
+            <div class="planet-status" id="planetStatus">星球荒芜中...</div>
+
+            <!-- 计时器（学习/运动模式显示） -->
+            <div class="timer-wrapper" id="timerWrapper">
+                <div class="timer-label" id="timerLabel">专注时长</div>
+                <div class="timer-display" id="timerDisplay">00:00</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===== 对话框弹窗（休息时显示） ===== -->
+<div class="dialog-overlay" id="dialogOverlay">
+    <div class="dialog-box">
+        <div class="dialog-emoji" id="dialogEmoji">✨</div>
+        <div class="dialog-title">星球留言</div>
+        <div class="dialog-message" id="dialogMessage"></div>
+        <button class="dialog-close-btn" onclick="closeDialog()">继续旅途 →</button>
+    </div>
+</div>
+
+<script>
+    // ============ 核心状态变量 ============
+    let currentMode = null;       // 当前模式：'study' | 'exercise' | 'rest' | null
+    let timerInterval = null;     // setInterval 句柄
+    let timerSeconds = 0;         // 已计时秒数（正向）
+    let isTimerRunning = false;   // 计时器是否运行中
+
+    // ============ 治愈系短句数组（拒绝数值内卷，只有情绪价值） ============
+    const healingMessages = [
+        { emoji: "💧", text: "你刚刚专注了很久，星球上的风都变得温柔了。去喝杯水，让自己也休息一下吧。" },
+        { emoji: "🌿", text: "星球感受到了你的耐心，每一次呼吸都在修复它的伤痕。你已经很好了。" },
+        { emoji: "🌙", text: "疲惫是信号，不是失败。给自己一个温暖的拥抱——星球也在和你一起休息。" },
+        { emoji: "✨", text: "专注就像灯塔之光，照亮了星球回家的路。今天的你，让这里亮了一点点。" },
+        { emoji: "🌸", text: "不需要与任何人比较，你的节奏本身就是这颗星球独有的旋律。做得很好。" }
+    ];
+
+    // ============ 核心函数：切换模式 ============
+    function switchMode(mode) {
+        currentMode = mode;
+
+        const planetArea     = document.getElementById('planetArea');
+        const planetStatus   = document.getElementById('planetStatus');
+        const timerWrapper   = document.getElementById('timerWrapper');
+        const timerDisplay   = document.getElementById('timerDisplay');
+        const timerLabel     = document.getElementById('timerLabel');
+        const stateLabel     = document.getElementById('stateLabel');
+        const particlesContainer = document.getElementById('particlesContainer');
+
+        // 移除所有状态类，并重置按钮高亮
+        planetArea.classList.remove('state-study', 'state-exercise', 'state-rest');
+        document.querySelectorAll('.control-button').forEach(btn => btn.classList.remove('active'));
+
+        // 清空粒子特效
+        particlesContainer.innerHTML = '';
+
+        // 停止计时器
+        stopTimer();
+
+        if (mode === 'study') {
+            // ===== 学习模式 =====
+            planetArea.classList.add('state-study');
+            document.getElementById('btnStudy').classList.add('active');
+            stateLabel.textContent = '学习中 📖';
+
+            // 显示计时器，隐藏荒芜文字
+            planetStatus.classList.add('fade-out');
+            timerWrapper.classList.add('active');
+            timerDisplay.classList.remove('exercise-color');
+            timerLabel.textContent = '专注时长';
+
+            // 重置并启动计时
+            timerSeconds = 0;
+            updateTimerDisplay();
+            startTimer();
+
+            // 生成治愈之雨粒子（向上浮动的发光圆点）
+            createFloatingParticles(50);
+
+        } else if (mode === 'exercise') {
+            // ===== 运动模式 =====
+            planetArea.classList.add('state-exercise');
+            document.getElementById('btnExercise').classList.add('active');
+            stateLabel.textContent = '运动中 🏃';
+
+            // 显示计时器，隐藏荒芜文字
+            planetStatus.classList.add('fade-out');
+            timerWrapper.classList.add('active');
+            timerDisplay.classList.add('exercise-color');
+            timerLabel.textContent = '活力时长';
+
+            // 重置并启动计时
+            timerSeconds = 0;
+            updateTimerDisplay();
+            startTimer();
+
+            // 生成活力光斑粒子（脉冲闪烁）
+            createPulsingParticles(70);
+
+        } else if (mode === 'rest') {
+            // ===== 休息模式 =====
+            planetArea.classList.add('state-rest');
+            document.getElementById('btnRest').classList.add('active');
+            stateLabel.textContent = '休息中 🌙';
+
+            // 隐藏计时器
+            timerWrapper.classList.remove('active');
+
+            // 短暂延迟后弹出治愈对话框（等待界面动画完成）
+            setTimeout(showDialog, 400);
+        }
+    }
+
+    // ============ 计时器：启动 ============
+    function startTimer() {
+        if (isTimerRunning) return;
+        isTimerRunning = true;
+        timerInterval = setInterval(() => {
+            timerSeconds++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    // ============ 计时器：停止 ============
+    function stopTimer() {
+        isTimerRunning = false;
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+    }
+
+    // ============ 计时器：更新显示（mm:ss 正向计时） ============
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timerSeconds / 60);
+        const seconds = timerSeconds % 60;
+        document.getElementById('timerDisplay').textContent =
+            String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+    }
+
+    // ============ 粒子特效：学习模式（治愈之雨，向上浮动） ============
+    function createFloatingParticles(count) {
+        const container = document.getElementById('particlesContainer');
+
+        for (let i = 0; i < count; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+
+            // 随机大小（2-7px）
+            const size = Math.random() * 5 + 2;
+            particle.style.width  = size + 'px';
+            particle.style.height = size + 'px';
+
+            // 随机横向初始位置
+            particle.style.left   = Math.random() * 100 + '%';
+            particle.style.bottom = '-10px';
+
+            // 随机颜色：深蓝 or 荧光绿
+            const colorPalette = [
+                'rgba(0, 212, 255, 0.85)',   // 青蓝
+                'rgba(0, 255, 136, 0.85)',   // 荧光绿
+                'rgba(80, 200, 255, 0.75)',  // 浅蓝
+            ];
+            const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+            particle.style.background = color;
+            particle.style.boxShadow  = `0 0 ${size * 3}px ${color}`;
+
+            // 随机上浮持续时间（8-18秒）
+            const duration = Math.random() * 10 + 8;
+            // 随机横向漂移量
+            const tx = (Math.random() - 0.5) * 120;
+            particle.style.setProperty('--tx', tx + 'px');
+
+            particle.style.animation      = `float-up ${duration}s linear infinite`;
+            particle.style.animationDelay = (Math.random() * duration) + 's';
+
+            container.appendChild(particle);
+        }
+    }
+
+    // ============ 粒子特效：运动模式（活力光斑，脉冲闪烁） ============
+    function createPulsingParticles(count) {
+        const container = document.getElementById('particlesContainer');
+
+        for (let i = 0; i < count; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+
+            // 随机大小（2-5px）
+            const size = Math.random() * 3 + 2;
+            particle.style.width  = size + 'px';
+            particle.style.height = size + 'px';
+
+            // 随机分布在整个视觉区域
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top  = Math.random() * 100 + '%';
+
+            // 暖橙/金黄色系
+            const colorPalette = [
+                'rgba(255, 140, 60, 0.9)',
+                'rgba(255, 200, 80, 0.85)',
+                'rgba(255, 100, 40, 0.9)',
+            ];
+            const color = colorPalette[Math.floor(Math.random() * colorPalette.length)];
+            particle.style.background = color;
+            particle.style.boxShadow  = `0 0 8px ${color}`;
+
+            // 随机脉冲放大倍数（1.5–3×）和微小位移
+            particle.style.setProperty('--ps', (Math.random() * 1.5 + 1.5).toFixed(2));
+            particle.style.setProperty('--mx', (Math.random() - 0.5) * 20 + 'px');
+            particle.style.setProperty('--my', (Math.random() - 0.5) * 20 + 'px');
+
+            // 随机脉冲周期（0.8-2.5秒）
+            const duration = Math.random() * 1.7 + 0.8;
+            particle.style.animation      = `pulse-glow ${duration}s ease-in-out infinite`;
+            particle.style.animationDelay = (Math.random() * duration) + 's';
+
+            container.appendChild(particle);
+        }
+    }
+
+    // ============ 对话框：显示治愈短句 ============
+    function showDialog() {
+        // 随机选取一条治愈短句
+        const item = healingMessages[Math.floor(Math.random() * healingMessages.length)];
+        document.getElementById('dialogEmoji').textContent    = item.emoji;
+        document.getElementById('dialogMessage').textContent  = item.text;
+
+        document.getElementById('dialogOverlay').classList.add('show');
+    }
+
+    // ============ 对话框：关闭并回到待机 ============
+    function closeDialog() {
+        document.getElementById('dialogOverlay').classList.remove('show');
+
+        // 恢复星球到初始荒芜状态
+        currentMode = null;
+        const planetArea   = document.getElementById('planetArea');
+        const planetStatus = document.getElementById('planetStatus');
+        const timerWrapper = document.getElementById('timerWrapper');
+
+        planetArea.classList.remove('state-study', 'state-exercise', 'state-rest');
+        document.querySelectorAll('.control-button').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('stateLabel').textContent = '待机中';
+
+        // 恢复荒芜文字，隐藏计时器
+        planetStatus.classList.remove('fade-out');
+        timerWrapper.classList.remove('active');
+        document.getElementById('timerDisplay').textContent = '00:00';
+        timerSeconds = 0;
+
+        // 清空粒子
+        document.getElementById('particlesContainer').innerHTML = '';
+    }
+
+    // ============ 初始化 ============
+    window.addEventListener('DOMContentLoaded', () => {
+        console.log('心流战记 (Flow Chronicles) MVP 已加载 ✨');
+    });
+</script>
+
+</body>
+</html>
