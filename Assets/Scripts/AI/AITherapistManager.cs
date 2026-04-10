@@ -8,7 +8,7 @@ using Flowcube.Core;
 namespace Flowcube.AI
 {
     /// <summary>
-    /// Feature 3 – "Healing Therapist API"
+    /// Feature 3 – "Short-Memory AI Therapist"
     ///
     /// Collects behavioural context from DataManager, builds a Prompt, and
     /// sends it to the configured AI backend (DeepSeek / Kimi / ZhipuAI).
@@ -51,7 +51,7 @@ namespace Flowcube.AI
         private const string SystemPrompt =
             "你是一位来自星球的温柔守望者，名叫「星岚」。" +
             "你的回复必须满足以下所有要求：" +
-            "1. 字数严格控制在30字以内；" +
+            "1. 字数严格不超过30字；" +
             "2. 语气温暖、治愈、克制，不使用感叹号；" +
             "3. 必须自然地融入用户提供的至少一个具体情境细节；" +
             "4. 结尾不要有任何标点符号。";
