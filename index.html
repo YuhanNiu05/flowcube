@@ -485,8 +485,14 @@
 
 <script>
 const App = (() => {
-  const API_BASE = 'http://localhost:3000/api';
-  const WS_URL   = 'ws://localhost:3000/ws';
+  // API_BASE and WS_URL auto-detect to the current host in production;
+  // override via window.FLOWCUBE_API and window.FLOWCUBE_WS for custom deployments.
+  const API_BASE = window.FLOWCUBE_API || (location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+    ? 'http://' + location.hostname + ':3000/api'
+    : location.origin + '/api');
+  const WS_URL = window.FLOWCUBE_WS || (location.hostname === 'localhost' || location.hostname === '127.0.0.1'
+    ? 'ws://' + location.hostname + ':3000/ws'
+    : (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws');
 
   const state = {
     currentView:'auth', authToken:null, user:null,
@@ -520,7 +526,11 @@ const App = (() => {
   function setLoading(on){document.getElementById('progress-overlay').classList.toggle('show',on);}
   function persist(k,v){try{localStorage.setItem('fc_'+k,JSON.stringify(v));}catch{}}
   function retrieve(k){try{return JSON.parse(localStorage.getItem('fc_'+k));}catch{return null;}}
-  function computeHealth(s){return Math.min(100,Math.round(s/(1800*60)*100));}
+  // 30 hours of total focus = 100% planet health
+  const MAX_HEALTH_SECONDS = 1800 * 60;
+  // Sessions shorter than this threshold are treated as accidental and abandoned
+  const MIN_SESSION_DURATION_SEC = 10;
+  function computeHealth(s){return Math.min(100,Math.round(s/MAX_HEALTH_SECONDS*100));}
 
   function navigate(view){
     document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
@@ -572,7 +582,7 @@ const App = (() => {
       if(!ok) throw new Error(data.error||'登录失败');
       onAuthSuccess(data.user,data.token);
     }catch(e){
-      if(e instanceof TypeError){onAuthSuccess({id:'offline-'+Date.now(),username:email.split('@')[0],email},'offline-token');showToast('离线演示模式');}
+      if(e.name==='TypeError'||e.name==='NetworkError'||e.message==='Failed to fetch'){onAuthSuccess({id:'offline-'+Date.now(),username:email.split('@')[0],email},'offline-token');showToast('离线演示模式');}
       else{errEl.textContent=e.message;errEl.classList.add('show');}
     }finally{setLoading(false);}
   }
@@ -593,7 +603,7 @@ const App = (() => {
       if(!ok) throw new Error(data.error||'注册失败');
       onAuthSuccess(data.user,data.token); showToast('账号创建成功！欢迎来到心流星球 🌍');
     }catch(e){
-      if(e instanceof TypeError){onAuthSuccess({id:'offline-'+Date.now(),username,email},'offline-token');showToast('离线演示模式');}
+      if(e.name==='TypeError'||e.name==='NetworkError'||e.message==='Failed to fetch'){onAuthSuccess({id:'offline-'+Date.now(),username,email},'offline-token');showToast('离线演示模式');}
       else{errEl.textContent=e.message;errEl.classList.add('show');}
     }finally{setLoading(false);}
   }
@@ -690,7 +700,7 @@ const App = (() => {
 
   async function stopFocus(){
     const elapsed=state.timerType==='forward'?state.timerSeconds:(state.countdownMinutes*60-state.timerSeconds);
-    if(elapsed<10){await abandonSession();stopTimer();clearParticles();navigate('mode');return;}
+    if(elapsed<MIN_SESSION_DURATION_SEC){await abandonSession();stopTimer();clearParticles();navigate('mode');return;}
     await completeFocus();
   }
 

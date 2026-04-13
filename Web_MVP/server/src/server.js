@@ -86,13 +86,13 @@ wss.on('connection', (ws, req) => {
 });
 
 // ── HTTP middleware ────────────────────────────────────────────────────────
-const allowedOrigins = (process.env.CORS_ORIGINS || '')
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5500,http://127.0.0.1:5500,http://localhost:3000')
   .split(',')
   .map(o => o.trim())
   .filter(Boolean);
 
 app.use(cors({
-  origin: allowedOrigins.length ? allowedOrigins : '*',
+  origin: allowedOrigins,
   credentials: true
 }));
 

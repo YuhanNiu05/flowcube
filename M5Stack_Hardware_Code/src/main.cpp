@@ -5,21 +5,14 @@
 //   - M5Core2 (by M5Stack)
 //   - ArduinoJson (by Benoit Blanchon)
 //   - WebSocketsClient (by Markus Sattler)
+//
+// 配置：将 config.h.example 复制为 config.h 并填入 WiFi 和服务器信息。
 
 #include <M5Core2.h>
 #include <WiFi.h>
 #include <ArduinoJson.h>
 #include <WebSocketsClient.h>
-
-// ── WiFi 配置 ──────────────────────────────────────────────────────
-#define WIFI_SSID     "YOUR_WIFI_SSID"
-#define WIFI_PASSWORD "YOUR_WIFI_PASSWORD"
-
-// ── 服务端配置 ─────────────────────────────────────────────────────
-#define SERVER_HOST "192.168.1.100"   // 替换为运行后端的主机 IP
-#define SERVER_PORT 3000
-#define SERVER_PATH "/ws"
-#define DEVICE_ID   "m5stack-flowcube-01"
+#include "config.h"
 
 // ── 翻转检测阈值 ──────────────────────────────────────────────────
 #define TILT_THRESHOLD   0.6f   // |cos θ| 分量阈值（0~1）
@@ -292,7 +285,7 @@ void loop() {
     Face raw = detectFace();
 
     if (raw == currentFace) {
-      stableCount = min(stableCount + 1, STABLE_FRAMES + 1);
+      stableCount = min(stableCount + 1, STABLE_FRAMES);
     } else {
       stableCount = 0;
       currentFace = raw;

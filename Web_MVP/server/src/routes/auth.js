@@ -5,8 +5,31 @@ const supabase = require('../config/supabase');
 
 const router = express.Router();
 
-const SALT_ROUNDS = 12;
+const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS) || 12;
 const TOKEN_EXPIRY = '7d';
+
+// Simple in-memory rate limiter for auth endpoints (per IP, no external dep required)
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const RATE_LIMIT_MAX = 20; // max requests per window
+
+function authRateLimit(req, res, next) {
+  const key = req.ip;
+  const now = Date.now();
+  const entry = rateLimitMap.get(key) || { count: 0, resetAt: now + RATE_LIMIT_WINDOW_MS };
+  if (now > entry.resetAt) {
+    entry.count = 0;
+    entry.resetAt = now + RATE_LIMIT_WINDOW_MS;
+  }
+  entry.count++;
+  rateLimitMap.set(key, entry);
+  if (entry.count > RATE_LIMIT_MAX) {
+    return res.status(429).json({ error: 'Too many requests, please try again later' });
+  }
+  next();
+}
+
+router.use(authRateLimit);
 
 function signToken(userId, username) {
   return jwt.sign(

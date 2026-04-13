@@ -111,8 +111,8 @@ router.delete('/:id', async (req, res) => {
 // GET /api/sessions — list completed sessions for the current user
 router.get('/', async (req, res) => {
   const userId = req.user.sub;
-  const limit = Math.min(parseInt(req.query.limit) || 20, 100);
-  const offset = parseInt(req.query.offset) || 0;
+  const limit = Math.min(Math.max(parseInt(req.query.limit) || 20, 1), 100);
+  const offset = Math.max(parseInt(req.query.offset) || 0, 0);
 
   if (!supabase) {
     return res.json({ sessions: [], total: 0, demo: true });

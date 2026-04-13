@@ -19,8 +19,6 @@ router.get('/', async (req, res) => {
       exercise_duration: 0,
       today_duration: 0,
       week_duration: 0,
-      current_streak: 0,
-      longest_streak: 0,
       demo: true
     });
   }
