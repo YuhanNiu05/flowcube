@@ -140,30 +140,30 @@
     .custom-dur-row input[type="number"] { width:80px; padding:8px 12px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text); font-family:inherit; font-size:16px; text-align:center; outline:none; }
     .custom-dur-row input[type="number"]:focus { border-color:var(--blue); }
     .custom-dur-row span { color:var(--text-dim); font-size:14px; }
-    /* TIMER */
+    /* TIMER V2 – 3D Planet Focus Page */
     #view-timer { flex-direction:column; align-items:center; min-height:100vh; }
-    .timer-arena { flex:1; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; transition:background 2s; padding:40px 24px; }
-    .timer-arena.study-bg    { background:radial-gradient(ellipse at 50% 30%,rgba(0,80,140,0.35) 0%,rgba(13,13,26,1) 70%); }
-    .timer-arena.exercise-bg { background:radial-gradient(ellipse at 50% 30%,rgba(140,50,0,0.35) 0%,rgba(13,13,26,1) 70%); }
-    .timer-particles { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
-    .timer-mode-badge { font-family:'Orbitron',sans-serif; font-size:13px; letter-spacing:3px; text-transform:uppercase; padding:6px 18px; border-radius:20px; border:1px solid; margin-bottom:28px; position:relative; z-index:5; }
-    .timer-mode-badge.study    { color:var(--blue); border-color:var(--blue); box-shadow:0 0 12px rgba(100,200,255,0.25); }
-    .timer-mode-badge.exercise { color:var(--orange); border-color:var(--orange); box-shadow:0 0 12px rgba(255,140,60,0.25); }
-    .timer-clock { font-family:'Orbitron',sans-serif; font-size:clamp(60px,14vw,110px); font-weight:900; letter-spacing:6px; position:relative; z-index:5; line-height:1; }
-    .timer-clock.study    { color:#00d4ff; text-shadow:0 0 40px rgba(0,212,255,0.6); }
-    .timer-clock.exercise { color:var(--orange); text-shadow:0 0 40px rgba(255,140,60,0.6); }
-    .progress-ring-wrap { position:relative; z-index:5; display:flex; align-items:center; justify-content:center; }
-    .progress-ring-wrap .timer-clock { position:absolute; }
-    .progress-ring { transform:rotate(-90deg); }
-    .progress-ring-track { fill:none; stroke:rgba(255,255,255,0.08); stroke-width:4; }
-    .progress-ring-bar   { fill:none; stroke-width:4; stroke-linecap:round; transition:stroke-dashoffset 0.9s linear; }
-    .progress-ring-bar.study    { stroke:#00d4ff; filter:drop-shadow(0 0 6px rgba(0,212,255,0.5)); }
-    .progress-ring-bar.exercise { stroke:var(--orange); filter:drop-shadow(0 0 6px rgba(255,140,60,0.5)); }
-    .timer-label    { font-size:13px; color:var(--text-dim); letter-spacing:2px; margin-top:8px; position:relative; z-index:5; }
-    .timer-controls { display:flex; gap:16px; margin-top:36px; position:relative; z-index:5; }
-    .timer-hw-note  { margin-top:20px; font-size:12px; color:var(--text-dim); text-align:center; position:relative; z-index:5; }
-    @keyframes float-up   { 0%{transform:translateY(0) translateX(0);opacity:.85}100%{transform:translateY(-110vh) translateX(var(--tx));opacity:0} }
-    @keyframes pulse-glow { 0%,100%{transform:scale(1);opacity:.8}50%{transform:scale(1.6);opacity:1} }
+    .timer-arena { flex:1; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; padding:20px 20px 28px; gap:0; overflow:hidden; transition:background 3s; }
+    .timer-arena.study-bg    { background:radial-gradient(ellipse at 50% 40%, rgba(0,40,100,0.4) 0%, rgba(8,8,20,1) 65%); }
+    .timer-arena.exercise-bg { background:radial-gradient(ellipse at 50% 40%, rgba(110,35,0,0.4) 0%, rgba(8,8,20,1) 65%); }
+    .timer-mode-badge { font-family:'Orbitron',sans-serif; font-size:10px; letter-spacing:3px; text-transform:uppercase; padding:4px 16px; border-radius:20px; border:1px solid; margin-bottom:14px; position:relative; z-index:5; }
+    .timer-mode-badge.study    { color:var(--blue); border-color:rgba(100,200,255,0.35); background:rgba(100,200,255,0.06); }
+    .timer-mode-badge.exercise { color:var(--orange); border-color:rgba(255,140,60,0.35); background:rgba(255,140,60,0.06); }
+    /* Planet canvas */
+    .planet-canvas-wrap { position:relative; z-index:5; width:min(320px,82vw); height:min(320px,82vw); }
+    #planet-canvas { width:100%; height:100%; display:block; }
+    /* Small subtle clock */
+    .timer-clock { font-family:'Orbitron',sans-serif; font-size:clamp(18px,4.5vw,24px); font-weight:700; letter-spacing:4px; margin-top:14px; position:relative; z-index:5; opacity:0.72; }
+    .timer-clock.study    { color:#00d4ff; }
+    .timer-clock.exercise { color:var(--orange); }
+    .timer-label    { font-size:11px; color:var(--text-dim); letter-spacing:2px; margin-top:3px; position:relative; z-index:5; opacity:0.65; }
+    .timer-controls { display:flex; gap:16px; margin-top:22px; position:relative; z-index:5; }
+    .timer-hw-note  { margin-top:10px; font-size:11px; color:var(--text-dim); text-align:center; position:relative; z-index:5; opacity:0.55; }
+    /* Growth stage label */
+    .timer-growth-label { font-size:11px; color:var(--green); letter-spacing:2px; margin-top:6px; position:relative; z-index:5; opacity:0; transition:opacity 0.8s; text-align:center; }
+    .timer-growth-label.visible { opacity:0.75; }
+    /* Hidden legacy elements */
+    .timer-particles { display:none; }
+    .progress-ring-wrap { display:none !important; }
     @keyframes slide-in   { from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none} }
     /* PLANET */
     #view-planet { flex-direction:column; align-items:center; padding:24px 20px; gap:20px; }
@@ -383,21 +383,16 @@
 <!-- VIEW: TIMER -->
 <div id="view-timer" class="view">
   <div class="timer-arena" id="timer-arena">
-    <div class="timer-particles" id="timer-particles"></div>
+    <!-- Mode badge -->
     <div class="timer-mode-badge study" id="timer-mode-badge">学习模式</div>
-    <div id="timer-forward-wrap">
-      <div class="timer-clock study" id="timer-clock">00:00</div>
+    <!-- 3D Planet Canvas – main visual -->
+    <div class="planet-canvas-wrap" id="planet-canvas-wrap">
+      <canvas id="planet-canvas" width="340" height="340"></canvas>
     </div>
-    <div id="timer-countdown-wrap" style="display:none">
-      <div class="progress-ring-wrap">
-        <svg class="progress-ring" width="260" height="260">
-          <circle class="progress-ring-track" cx="130" cy="130" r="120"/>
-          <circle class="progress-ring-bar study" id="progress-ring-bar" cx="130" cy="130" r="120"
-            stroke-dasharray="753.98" stroke-dashoffset="0"/>
-        </svg>
-        <div class="timer-clock study" id="timer-clock-cd">00:00</div>
-      </div>
-    </div>
+    <!-- Subtle growth stage hint -->
+    <div class="timer-growth-label" id="timer-growth-label"></div>
+    <!-- Subtle digital clock -->
+    <div class="timer-clock study" id="timer-clock">00:00</div>
     <div class="timer-label" id="timer-label">专注中...</div>
     <div class="timer-controls">
       <button class="btn btn-ghost" id="btn-pause" onclick="App.pauseTimer()">
@@ -408,6 +403,13 @@
       </button>
     </div>
     <div class="timer-hw-note" id="timer-hw-note"></div>
+    <!-- Legacy compat elements (hidden) -->
+    <div id="timer-forward-wrap" style="display:none"></div>
+    <div id="timer-countdown-wrap" style="display:none">
+      <svg width="0" height="0"><circle id="progress-ring-bar" cx="0" cy="0" r="0"/></svg>
+      <div id="timer-clock-cd" style="display:none">00:00</div>
+    </div>
+    <div class="timer-particles" id="timer-particles"></div>
   </div>
 </div>
 
@@ -484,6 +486,312 @@
 </div>
 
 <script>
+// ── PlanetRenderer: 3D cyberpunk-healing planet animation ──────────────────
+const PlanetRenderer = (() => {
+  let canvas, ctx, animId, phase = 0, rot = 0, elapsedSec = 0, mode = 'study';
+
+  // Pre-computed stars (fixed across renders)
+  const STARS = Array.from({length:110}, () => ({
+    x: Math.random(), y: Math.random(),
+    r: Math.random() * 1.6 + 0.3,
+    a: 0.15 + Math.random() * 0.65,
+    tw: Math.random() * Math.PI * 2
+  }));
+
+  // Low-poly terrain patches (fixed layout, rotates with planet)
+  const TERRAIN = Array.from({length:22}, (_, i) => {
+    const t  = (i / 22) * Math.PI * 1.3 + 0.25;
+    const ph = i * 2.618 + i * 0.4;
+    return {
+      cx: Math.cos(ph) * Math.sin(t),
+      cy: Math.cos(t) * 0.92,
+      cz: Math.sin(ph) * Math.sin(t),
+      size: 0.09 + (i % 5) * 0.025,
+      hue: 185 + (i % 6) * 16,
+      lit: 12 + (i % 4) * 7
+    };
+  });
+
+  function lerp(a, b, t) { return a + (b - a) * Math.max(0, Math.min(1, t)); }
+
+  function start(el, modeStr) {
+    canvas = el; ctx = canvas.getContext('2d');
+    mode = modeStr; phase = 0; rot = 0; elapsedSec = 0;
+    stop();
+    loop();
+  }
+
+  function update(sec) { elapsedSec = sec; }
+
+  function stop() { if (animId) { cancelAnimationFrame(animId); animId = null; } }
+
+  function loop() { animId = requestAnimationFrame(loop); phase += 0.017; rot += 0.0035; draw(); }
+
+  function draw() {
+    const W = canvas.width, H = canvas.height;
+    const cx = W / 2, cy = H / 2 + 6;
+    const R = Math.round(W * 0.382);
+    const mins = elapsedSec / 60;
+    const breath = (Math.sin(phase) + 1) / 2;          // 0–1 breathing cycle
+    const isStudy = mode === 'study';
+    ctx.clearRect(0, 0, W, H);
+
+    // ── Stars ────────────────────────────────────────────────────────────────
+    STARS.forEach(s => {
+      const tw = Math.sin(phase * 0.28 + s.tw);
+      ctx.beginPath();
+      ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${Math.max(0, s.a + tw * 0.12)})`;
+      ctx.fill();
+    });
+
+    // ── Outer atmosphere breathing glow ──────────────────────────────────────
+    {
+      const t = Math.min(1, mins / 14);
+      const grR = isStudy ? 0 : Math.round(lerp(200,255,t));
+      const grG = isStudy ? Math.round(lerp(80,210,t)) : Math.round(lerp(70,120,t));
+      const grB = isStudy ? Math.round(lerp(160,255,t)) : 0;
+      const glowR = R + 22 + breath * 20;
+      const ag = ctx.createRadialGradient(cx, cy, R * 0.88, cx, cy, glowR + 22);
+      ag.addColorStop(0, `rgba(${grR},${grG},${grB},${0.35 + breath * 0.22})`);
+      ag.addColorStop(1, `rgba(${grR},${grG},${grB},0)`);
+      ctx.beginPath(); ctx.arc(cx, cy, glowR + 22, 0, Math.PI * 2);
+      ctx.fillStyle = ag; ctx.fill();
+    }
+
+    // ── Planet sphere (clip) ──────────────────────────────────────────────────
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.clip();
+
+    // Base gradient
+    {
+      const t = Math.min(1, mins / 14);
+      let c0, c1;
+      if (isStudy) {
+        c0 = `rgb(${Math.round(lerp(72,18,t))},${Math.round(lerp(78,100,t))},${Math.round(lerp(115,175,t))})`;
+        c1 = `rgb(${Math.round(lerp(28,8,t))},${Math.round(lerp(28,48,t))},${Math.round(lerp(52,100,t))})`;
+      } else {
+        c0 = `rgb(${Math.round(lerp(100,155,t))},${Math.round(lerp(55,75,t))},${Math.round(lerp(28,18,t))})`;
+        c1 = `rgb(${Math.round(lerp(38,60,t))},18,8)`;
+      }
+      const bg = ctx.createRadialGradient(cx - R*0.3, cy - R*0.35, R*0.08, cx, cy, R);
+      bg.addColorStop(0, c0); bg.addColorStop(0.55, c1); bg.addColorStop(1, 'rgb(4,4,14)');
+      ctx.fillStyle = bg; ctx.fillRect(cx-R, cy-R, R*2, R*2);
+    }
+
+    // Low-poly terrain (fades in as rain clears after ~7 min)
+    {
+      const ta = Math.max(0, Math.min(1, (mins - 7) / 7));
+      if (ta > 0) {
+        const cosR = Math.cos(rot), sinR = Math.sin(rot);
+        TERRAIN.forEach(p => {
+          const rx = p.cx * cosR - p.cz * sinR;
+          const rz = p.cx * sinR + p.cz * cosR;
+          const ry = p.cy;
+          if (rz > -0.05) {
+            const px2 = cx + rx * R;
+            const py2 = cy - ry * R * 0.93;
+            const ps  = p.size * R * (0.45 + rz * 0.55);
+            ctx.beginPath();
+            ctx.moveTo(px2, py2 - ps);
+            ctx.lineTo(px2 - ps * 0.87, py2 + ps * 0.5);
+            ctx.lineTo(px2 + ps * 0.87, py2 + ps * 0.5);
+            ctx.closePath();
+            const h = isStudy ? p.hue : p.hue - 145;
+            ctx.fillStyle = `hsla(${h},42%,${p.lit}%,${ta * (0.28 + rz * 0.42)})`;
+            ctx.fill();
+          }
+        });
+      }
+    }
+
+    // Cyberpunk hex-scan lines (very subtle)
+    {
+      const lAlpha = Math.max(0, Math.min(0.035, (mins - 7) / 7 * 0.035));
+      if (lAlpha > 0) {
+        ctx.strokeStyle = isStudy ? `rgba(0,212,255,${lAlpha})` : `rgba(255,140,60,${lAlpha})`;
+        ctx.lineWidth = 0.5;
+        for (let ly = cy - R; ly < cy + R; ly += 14) {
+          ctx.beginPath(); ctx.moveTo(cx - R, ly); ctx.lineTo(cx + R, ly); ctx.stroke();
+        }
+      }
+    }
+
+    // Specular highlight (top-left, simulates light source)
+    {
+      const spec = ctx.createRadialGradient(cx-R*0.34, cy-R*0.37, 0, cx-R*0.34, cy-R*0.37, R*0.65);
+      spec.addColorStop(0, 'rgba(255,255,255,0.11)');
+      spec.addColorStop(0.5, 'rgba(255,255,255,0.03)');
+      spec.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = spec; ctx.fillRect(cx-R, cy-R, R*2, R*2);
+    }
+
+    // Rim darkening (sphere depth)
+    {
+      const rim = ctx.createRadialGradient(cx, cy, R*0.7, cx, cy, R);
+      rim.addColorStop(0, 'rgba(0,0,0,0)');
+      rim.addColorStop(1, 'rgba(0,0,10,0.78)');
+      ctx.fillStyle = rim; ctx.fillRect(cx-R, cy-R, R*2, R*2);
+    }
+
+    // Cloud/overcast overlay (0-14 min fading)
+    {
+      const ca = Math.max(0, 1 - mins / 14) * 0.62;
+      if (ca > 0.02) {
+        const clouds = [
+          {ox:-0.38,oy:-0.18,rx:0.52,ry:0.24},{ox:0.18,oy:0.12,rx:0.58,ry:0.20},
+          {ox:-0.08,oy:-0.48,rx:0.44,ry:0.19},{ox:0.52,oy:-0.28,rx:0.36,ry:0.17},
+          {ox:-0.58,oy:0.28,rx:0.42,ry:0.19},{ox:0.0,oy:0.42,rx:0.5,ry:0.18}
+        ];
+        clouds.forEach((c, i) => {
+          const drift = Math.sin(phase * 0.25 + i * 1.1) * 0.04;
+          const ex = cx + (c.ox + drift) * R, ey = cy + c.oy * R;
+          const cg = ctx.createRadialGradient(ex, ey, 0, ex, ey, c.rx * R);
+          cg.addColorStop(0, `rgba(165,175,200,${ca * 0.72})`);
+          cg.addColorStop(1, `rgba(165,175,200,0)`);
+          ctx.beginPath(); ctx.ellipse(ex, ey, c.rx*R, c.ry*R, 0, 0, Math.PI*2);
+          ctx.fillStyle = cg; ctx.fill();
+        });
+      }
+    }
+
+    // Rain (0-14 min)
+    {
+      const ra = Math.max(0, 1 - mins / 14);
+      if (ra > 0.04) {
+        for (let i = 0; i < 28; i++) {
+          const baseX = cx - R + ((i * 23.7) % (R * 2));
+          const yOff  = (phase * 55 + i * 19) % (R * 2.1);
+          const rx2   = baseX + yOff * 0.12;
+          const ry2   = cy - R + yOff;
+          const len   = 7 + (i % 6) * 2;
+          ctx.beginPath();
+          ctx.moveTo(rx2, ry2); ctx.lineTo(rx2 - 2, ry2 + len);
+          ctx.strokeStyle = `rgba(180,205,255,${ra * 0.42})`;
+          ctx.lineWidth = 0.9; ctx.stroke();
+        }
+      }
+    }
+
+    // ── Plants ────────────────────────────────────────────────────────────────
+    // Grass  (appears at 15 min)
+    {
+      const a = Math.max(0, Math.min(1, (mins - 15) / 2.5));
+      if (a > 0) {
+        const gpos = [-0.46,-0.27,-0.06,0.14,0.33,0.50];
+        gpos.forEach((ox, i) => {
+          const sphereY = Math.sqrt(Math.max(0, 1 - ox*ox));
+          const px2 = cx + ox * R;
+          const py2 = cy + sphereY * R * 0.9;
+          const h = 11 + (i % 3) * 4, w = 7;
+          ctx.beginPath();
+          ctx.moveTo(px2, py2 - h * a);
+          ctx.lineTo(px2 - w/2, py2);
+          ctx.lineTo(px2 + w/2, py2);
+          ctx.closePath();
+          ctx.fillStyle = `rgba(0,255,136,${a * 0.88})`;
+          ctx.fill();
+        });
+      }
+    }
+
+    // Sprout (appears at 30 min)
+    {
+      const a = Math.max(0, Math.min(1, (mins - 30) / 2.5));
+      if (a > 0) {
+        const px2 = cx - 0.16 * R, py2 = cy + 0.75 * R * 0.58;
+        const h = 26 * a;
+        // stem
+        ctx.fillStyle = `rgba(0,195,100,${a * 0.9})`;
+        ctx.fillRect(px2 - 2, py2 - h, 4, h);
+        // left leaf
+        ctx.beginPath(); ctx.moveTo(px2, py2 - h*0.6);
+        ctx.lineTo(px2 - 15, py2 - h*0.3); ctx.lineTo(px2, py2 - h*0.2); ctx.closePath();
+        ctx.fillStyle = `rgba(0,215,115,${a * 0.85})`; ctx.fill();
+        // right leaf
+        ctx.beginPath(); ctx.moveTo(px2, py2 - h*0.52);
+        ctx.lineTo(px2 + 15, py2 - h*0.22); ctx.lineTo(px2, py2 - h*0.1); ctx.closePath();
+        ctx.fillStyle = `rgba(0,215,115,${a * 0.85})`; ctx.fill();
+      }
+    }
+
+    // Tree (appears at 45 min)
+    {
+      const a = Math.max(0, Math.min(1, (mins - 45) / 2.5));
+      if (a > 0) {
+        const px2 = cx + 0.22 * R, py2 = cy + 0.68 * R * 0.6;
+        const sc = a;
+        // trunk
+        ctx.fillStyle = `rgba(75,48,18,${a * 0.9})`;
+        ctx.fillRect(px2 - 4, py2 - 12*sc, 8, 13*sc);
+        // crown layers (low-poly)
+        [{y:0,w:30,h:18,g:155,b:75},{y:13,w:24,h:16,g:178,b:95},{y:24,w:18,h:14,g:200,b:115}].forEach(lv => {
+          ctx.beginPath();
+          ctx.moveTo(px2, py2 - (lv.y + lv.h)*sc);
+          ctx.lineTo(px2 - lv.w/2*sc, py2 - lv.y*sc);
+          ctx.lineTo(px2 + lv.w/2*sc, py2 - lv.y*sc);
+          ctx.closePath();
+          ctx.fillStyle = `rgba(0,${lv.g},${lv.b},${a * 0.9})`; ctx.fill();
+        });
+      }
+    }
+
+    // Spirit/Fairy (appears at 60 min)
+    {
+      const a = Math.max(0, Math.min(1, (mins - 60) / 3));
+      if (a > 0) {
+        const px2 = cx + 0.02 * R;
+        const pyBase = cy - 0.28 * R;
+        const bob  = Math.sin(phase * 1.6) * 5;
+        const py2  = pyBase + bob;
+        const glow = (Math.sin(phase * 2.2) + 1) / 2;
+        // outer glow
+        const sg = ctx.createRadialGradient(px2, py2, 2, px2, py2, 30);
+        sg.addColorStop(0, `rgba(195,130,255,${a * (0.42 + glow * 0.28)})`);
+        sg.addColorStop(1, `rgba(195,130,255,0)`);
+        ctx.beginPath(); ctx.arc(px2, py2, 30, 0, Math.PI*2);
+        ctx.fillStyle = sg; ctx.fill();
+        // wings
+        [[-22,-20,-14,2],[22,-20,14,2]].forEach(([wx,wy,wx2,wy2]) => {
+          ctx.beginPath(); ctx.moveTo(px2, py2 - 10);
+          ctx.lineTo(px2 + wx, py2 + wy); ctx.lineTo(px2 + wx2, py2 + wy2); ctx.closePath();
+          ctx.fillStyle = `rgba(155,75,255,${a * 0.60})`; ctx.fill();
+        });
+        // body (diamond)
+        ctx.beginPath(); ctx.moveTo(px2, py2 - 18); ctx.lineTo(px2 - 10, py2);
+        ctx.lineTo(px2, py2 + 18); ctx.lineTo(px2 + 10, py2); ctx.closePath();
+        ctx.fillStyle = `rgba(178,95,255,${a * 0.92})`; ctx.fill();
+        // head
+        ctx.beginPath(); ctx.arc(px2, py2 - 26, 8, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(218,158,255,${a * 0.95})`; ctx.fill();
+        // eyes
+        [-3.5, 3.5].forEach(dx => {
+          ctx.beginPath(); ctx.arc(px2 + dx, py2 - 27, 1.5, 0, Math.PI*2);
+          ctx.fillStyle = `rgba(255,230,255,${a})`; ctx.fill();
+        });
+      }
+    }
+
+    ctx.restore(); // end sphere clip
+
+    // ── Rim lighting (cyberpunk edge glow) ────────────────────────────────────
+    {
+      const t = Math.min(1, mins / 14);
+      const rc = isStudy
+        ? `rgba(0,${Math.round(lerp(160,218,t))},255,${0.48 + breath * 0.28})`
+        : `rgba(255,${Math.round(lerp(90,130,t))},0,${0.48 + breath * 0.28})`;
+      ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI*2);
+      ctx.strokeStyle = rc; ctx.lineWidth = 1.8; ctx.stroke();
+      // faint outer ring
+      ctx.beginPath(); ctx.arc(cx, cy, R + 5, 0, Math.PI*2);
+      ctx.strokeStyle = isStudy ? 'rgba(0,212,255,0.12)' : 'rgba(255,140,60,0.12)';
+      ctx.lineWidth = 1; ctx.stroke();
+    }
+  }
+
+  return { start, update, stop };
+})();
+
 const App = (() => {
   // API_BASE and WS_URL auto-detect to the current host in production;
   // override via window.FLOWCUBE_API and window.FLOWCUBE_WS for custom deployments.
@@ -657,17 +965,18 @@ const App = (() => {
     const badge=document.getElementById('timer-mode-badge');
     badge.className='timer-mode-badge '+mode;
     badge.textContent=mode==='study'?'📚 学习模式':'🏃 运动模式';
-    ['timer-clock','timer-clock-cd'].forEach(id=>{document.getElementById(id).className='timer-clock '+mode;});
-    document.getElementById('progress-ring-bar').className='progress-ring-bar '+mode;
+    document.getElementById('timer-clock').className='timer-clock '+mode;
     const isCd=state.timerType==='countdown';
-    document.getElementById('timer-forward-wrap').style.display=isCd?'none':'block';
-    document.getElementById('timer-countdown-wrap').style.display=isCd?'block':'none';
     state.timerSeconds=isCd?state.countdownMinutes*60:0;
     state.isPaused=false;
     document.getElementById('btn-pause').innerHTML='<i class="fas fa-pause"></i> 暂停';
     document.getElementById('timer-label').textContent='专注中...';
-    updateTimerDisplay(); clearParticles(); createParticles(mode);
-    document.getElementById('timer-hw-note').textContent=state.hwConnected?'✅ M5Stack 已同步':'提示：翻转 M5Stack 也可触发专注模式';
+    const glLabel=document.getElementById('timer-growth-label');
+    glLabel.textContent='';glLabel.classList.remove('visible');
+    updateTimerDisplay();
+    // Start 3D planet canvas animation
+    PlanetRenderer.start(document.getElementById('planet-canvas'), mode);
+    document.getElementById('timer-hw-note').textContent=state.hwConnected?'✅ M5Stack 已同步':'';
   }
 
   function runTimer(){
@@ -680,15 +989,36 @@ const App = (() => {
     },1000);
   }
 
-  function stopTimer(){if(state.timerInterval){clearInterval(state.timerInterval);state.timerInterval=null;}}
+  function stopTimer(){if(state.timerInterval){clearInterval(state.timerInterval);state.timerInterval=null;}PlanetRenderer.stop();}
+
+  // Growth stage hints shown at milestone minutes
+  const GROWTH_HINTS = [
+    {min:15, text:'🌿 草芽破土而出…'},
+    {min:30, text:'🌱 小苗正在生长…'},
+    {min:45, text:'🌲 树木悄然成形…'},
+    {min:60, text:'✨ 小精灵降临星球！'},
+  ];
+  let _lastHintMin = -1;
 
   function updateTimerDisplay(){
+    const elapsed=state.timerType==='forward'?state.timerSeconds:(state.countdownMinutes*60-state.timerSeconds);
     const t=fmtClock(state.timerSeconds);
     document.getElementById('timer-clock').textContent=t;
-    document.getElementById('timer-clock-cd').textContent=t;
-    if(state.timerType==='countdown'){
-      const circ=2*Math.PI*120;
-      document.getElementById('progress-ring-bar').style.strokeDashoffset=circ*(1-state.timerSeconds/(state.countdownMinutes*60));
+    // Update planet with elapsed seconds
+    PlanetRenderer.update(elapsed);
+    // Show growth hint labels at milestones
+    const mins=Math.floor(elapsed/60);
+    const hint=GROWTH_HINTS.slice().reverse().find(h=>mins>=h.min);
+    const glLabel=document.getElementById('timer-growth-label');
+    if(glLabel){
+      if(hint&&_lastHintMin!==hint.min){
+        _lastHintMin=hint.min;
+        glLabel.textContent=hint.text;
+        glLabel.classList.add('visible');
+      } else if(!hint&&_lastHintMin!==-1){
+        _lastHintMin=-1;
+        glLabel.textContent='';glLabel.classList.remove('visible');
+      }
     }
   }
 
@@ -724,34 +1054,12 @@ const App = (() => {
 
   function closeCompletionDialog(again){
     document.getElementById('completion-dialog').classList.remove('show');
-    clearParticles();state.sessionId=null;
+    PlanetRenderer.stop();state.sessionId=null;_lastHintMin=-1;
     if(again)navigate('mode');else navigate('home');
   }
 
-  function clearParticles(){document.getElementById('timer-particles').innerHTML='';}
-
-  function createParticles(mode){
-    const container=document.getElementById('timer-particles');
-    for(let i=0;i<(mode==='study'?35:55);i++){
-      const p=document.createElement('div');
-      p.style.cssText='position:absolute;border-radius:50%;pointer-events:none;';
-      const sz=Math.random()*5+2;p.style.width=p.style.height=sz+'px';
-      if(mode==='study'){
-        p.style.left=Math.random()*100+'%';p.style.bottom='-20px';
-        const c=Math.random()<0.5?'rgba(0,212,255,.85)':'rgba(0,255,136,.85)';
-        p.style.background=c;p.style.boxShadow='0 0 '+(sz*3)+'px '+c;
-        p.style.setProperty('--tx',(Math.random()-.5)*120+'px');
-        p.style.animation='float-up '+(Math.random()*7+8)+'s ease-in infinite';
-        p.style.animationDelay=Math.random()*10+'s';
-      }else{
-        p.style.left=Math.random()*100+'%';p.style.top=Math.random()*100+'%';
-        p.style.background='rgba(255,140,60,.9)';p.style.boxShadow='0 0 10px rgba(255,140,60,.9)';
-        p.style.animation='pulse-glow '+(Math.random()*2+1)+'s ease-in-out infinite';
-        p.style.animationDelay=Math.random()*2+'s';
-      }
-      container.appendChild(p);
-    }
-  }
+  function clearParticles(){/* handled by PlanetRenderer canvas */}
+  function createParticles(){/* handled by PlanetRenderer canvas */}
 
   async function loadHomeStats(){
     const sessions=retrieve('sessions')||[];
