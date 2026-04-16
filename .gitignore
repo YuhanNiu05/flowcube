@@ -97,3 +97,11 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# FlowCube project specific
+node_modules/
+.env
+Web_MVP/server/.env
+
+# M5Stack secrets
+M5Stack_Hardware_Code/src/config.h
